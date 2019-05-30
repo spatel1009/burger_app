@@ -9,7 +9,11 @@ const burger = (props) => {
   for (let key in props.ingredients) {
     for (let i = 0; i < props.ingredients[key]; i++) {
         transformedIngredients.push(<BurgerIngredient key={key + i} type={key} />);
-    }
+    };
+  };
+
+  if (transformedIngredients.length === 0) {
+    transformedIngredients = <p>Please add some ingredients</p>
   }
 
   return (
