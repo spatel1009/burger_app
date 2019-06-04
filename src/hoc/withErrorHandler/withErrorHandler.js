@@ -8,15 +8,22 @@ const withErrorHandler = (WrappedComponent, axios) => {
     }
 
     componentWillMount () {
-      // Add request to clear errors anytime a request is made
-      axios.interceptors.request.use(req => {
+      // Add request to clear errors anytime a request is made.  By adding this. in front, creating a property for the class.
+      this.reqInterCeptor = axios.interceptors.request.use(req => {
         this.setState( { error: null } );
         return req;
-      })
+      });
       // Below the shortest possible way to return the response, which is necessary.
-      axios.interceptors.response.use(resp => resp, error => {
+      this.resInterceptor = axios.interceptors.response.use(resp => resp, error => {
         this.setState( { error: error } );
       });
+    }
+
+    //below is added to prevent memory leak to remove the interceptors
+
+    componentWillUnmount () {
+      axios.interceptors.request.eject(this.reqInterCeptor);
+      axios.interceptors.response.eject(this.resInterceptor);
     }
 
     errorConfirmedHandler = () => {
